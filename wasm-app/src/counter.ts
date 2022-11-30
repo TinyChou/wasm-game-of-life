@@ -48,7 +48,7 @@ export function setupWasmGreet(element: HTMLButtonElement) {
       ctx.stroke()
     }
     const getIndex = (row: number, column: number) => row * width + column
-    const bitIsSet = (n, arr) => {
+    const bitIsSet = (n: number, arr: Uint8Array) => {
       const byte = Math.floor(n / 8)
       const mask = 1 << (n % 8)
       return (arr[byte] & mask) === mask

@@ -1,4 +1,4 @@
-import * as wasm from 'wasm-game-of-life'
+import { Universe } from 'wasm-game-of-life'
 
 export function setupCounter(element: HTMLButtonElement) {
   let counter = 0
@@ -11,5 +11,16 @@ export function setupCounter(element: HTMLButtonElement) {
 }
 
 export function setupWasmGreet(element: HTMLButtonElement) {
-  element.addEventListener('click', () => wasm.greet("Your Name"))
+  element.addEventListener('click', () => {
+    const pre = document.getElementById('game-of-life-canvas')
+    const universe = Universe.new()
+    const renderLoop = () => {
+      pre!.textContent = universe.render()
+      universe.tick()
+
+      requestAnimationFrame(renderLoop)
+    }
+
+    requestAnimationFrame(renderLoop)
+  })
 }

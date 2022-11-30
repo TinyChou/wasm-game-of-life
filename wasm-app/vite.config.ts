@@ -6,4 +6,9 @@ export default defineConfig({
   plugins: [
     wasm(),
   ],
+  optimizeDeps: {
+    exclude: [
+      'wasm-game-of-life',
+    ],
+  },
 })

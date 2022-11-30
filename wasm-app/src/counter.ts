@@ -11,5 +11,5 @@ export function setupCounter(element: HTMLButtonElement) {
 }
 
 export function setupWasmGreet(element: HTMLButtonElement) {
-  element.addEventListener('click', () => wasm.greet())
+  element.addEventListener('click', () => wasm.greet("Your Name"))
 }

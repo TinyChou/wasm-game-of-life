@@ -11,5 +11,5 @@ export function setupCounter(element: HTMLButtonElement) {
 }
 
 export function setupWasmGreet(_: HTMLButtonElement) {
-  greet()
+  greet("Your name")
 }

@@ -12,6 +12,14 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 extern crate js_sys;
 extern crate fixedbitset;
+extern crate web_sys;
+
+macro_rules! log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    };
+}
+
 #[wasm_bindgen]
 extern {
     fn alert(s: &str);
@@ -102,6 +110,8 @@ impl Universe {
     }
 
     pub fn new() -> Universe {
+        utils::set_panic_hook();
+
         let width = 64;
         let height = 64;
 
@@ -168,6 +178,14 @@ impl Universe {
                 let cell = self.cells[idx];
                 let live_neighbors = self.live_neighbor_count(row, column);
                 
+                log!(
+                    "cell[{}, {}] is initially {:?} and has {} live neighbors",
+                    row,
+                    column,
+                    cell,
+                    live_neighbors,
+                );
+
                 let next_cell = match (cell, live_neighbors) {
                     // Rule 1: Any live cell with fewer than two live
                     // neighbors dies, as if caused by underpopulation.
@@ -184,6 +202,8 @@ impl Universe {
                     // All other cells remain in the same state.
                     (otherwise, _) => otherwise,
                 };
+
+                log!("    it becomes {:?}", next_cell);
 
                 next[idx] = next_cell;
             }
@@ -264,6 +284,14 @@ impl BitUniverse {
                 let cell = self.cells[idx];
                 let live_neighbors = self.live_neighbor_count(row, column);
 
+                // log!(
+                //     "cell[{}, {}] is initially {:?} and has {} live neighbors",
+                //     row,
+                //     column,
+                //     cell,
+                //     live_neighbors,
+                // );
+
                 next.set(idx, match (cell, live_neighbors) {
                     (true, x) if x < 2 => false,
                     (true, 2) | (true, 3) => true,
@@ -271,6 +299,8 @@ impl BitUniverse {
                     (false, 3) => true,
                     (otherwise, _) => otherwise,
                 });
+
+                // log!("    it becomes {:?}", self.cells[idx]);
             }
         }
 

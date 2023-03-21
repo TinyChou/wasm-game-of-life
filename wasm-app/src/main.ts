@@ -20,6 +20,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </p>
     <pre id="game-of-life-pre"></pre>
     <canvas id="game-of-life-canvas"></canvas>
+    <div id="fps"></div>
   </div>
 `
 

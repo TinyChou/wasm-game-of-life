@@ -11,11 +11,11 @@ export function setupCounter(element: HTMLButtonElement) {
   setCounter(0)
 }
 
-export function setupWasmGreet(_: HTMLButtonElement) {
-  renderUniverseUsingCanvas2D()
+export function setupWasmGreet(element: HTMLButtonElement) {
+  renderUniverseUsingCanvas2D(element)
 }
 
-export function renderUniverseUsingCanvas2D() {
+export function renderUniverseUsingCanvas2D(element: HTMLButtonElement) {
   const CELL_SIZE = 5
   const GRID_COLOR = '#cccccc'
   const DEAD_COLOR = '#ffffff'
@@ -50,7 +50,7 @@ export function renderUniverseUsingCanvas2D() {
     ctx.stroke()
   }
 
-  const bitIsSet = (n: number, arr: number[]) => {
+  const bitIsSet = (n: number, arr: Uint8Array) => {
     const byte = Math.floor(n / 8)
     const mask = 1 << (n % 8)
     return (arr[byte] & mask) === mask
@@ -77,15 +77,31 @@ export function renderUniverseUsingCanvas2D() {
     }
   }
 
+  let animationId: number | null = null
   const renderLoop = () => {
     universe.tick()
 
     drawGrid()
     drawCells()
-    requestAnimationFrame(renderLoop)
+    animationId = requestAnimationFrame(renderLoop)
   }
 
-  requestAnimationFrame(renderLoop)
+  animationId = requestAnimationFrame(renderLoop)
+
+  const isPaused = () => animationId === null
+  const play = () => {
+    element.textContent = '⏸'
+    renderLoop()
+  }
+  const pause = () => {
+    element.textContent = '▶'
+    if (animationId) cancelAnimationFrame(animationId)
+    animationId = null
+  }
+  element.addEventListener('click', () => {
+    if (isPaused()) play()
+    else pause()
+  })
 }
 
 export function renderUniverseUsingDOM() {

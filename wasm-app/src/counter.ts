@@ -30,6 +30,26 @@ export function renderUniverseUsingCanvas2D(element: HTMLButtonElement) {
   canvas.height = (CELL_SIZE + 1) * height + 1
   canvas.width = (CELL_SIZE + 1) * width + 1
 
+  canvas.addEventListener('click', e => {
+    const boundingRect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / boundingRect.width
+    const scaleY = canvas.height / boundingRect.height
+    const canvasLeft = (e.clientX - boundingRect.left) * scaleX
+    const canvasTop = (e.clientY - boundingRect.top) * scaleY
+    const row = Math.min(
+      Math.floor(canvasTop / (CELL_SIZE + 1)),
+      height - 1,
+    )
+    const col = Math.min(
+      Math.floor(canvasLeft / (CELL_SIZE + 1)),
+      width - 1,
+    )
+
+    universe.toggle_cell(row, col)
+    drawGrid()
+    drawCells()
+  })
+
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
